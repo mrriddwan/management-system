@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actions\Company\CompanyAction;
 use App\Http\Resources\Company\CompanyResource;
+use App\Traits\Response\ResponseTrait;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyController extends Controller
 {
+    use ResponseTrait;
     /**
      * Display a listing of the resource.
      */
