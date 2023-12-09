@@ -4,14 +4,14 @@ namespace App\Repositories\Company;
 
 use Exception;
 use App\Models\Company;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class CompanyRepository implements CompanyRepoInterface
 {
 
-    public function index(): Collection
+    public function index(): LengthAwarePaginator
     {
-        return Company::all();
+        return Company::paginate();
     }
 
     public function show(int $Company_id): Company

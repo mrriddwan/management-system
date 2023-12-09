@@ -2,9 +2,9 @@
 
 namespace App\Actions\Company;
 
+use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Actions\ActionMaster;
-use App\Models\Company;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Company\CompanyRepoInterface;
