@@ -4,14 +4,16 @@ namespace App\Repositories\Employee;
 
 use Exception;
 use App\Models\Employee;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class EmployeeRepository implements EmployeeRepoInterface
 {
 
-    public function index(): Collection
+    public function index(): LengthAwarePaginator
     {
-        return Employee::all();
+        dd(1);
+        return Employee::paginate();
     }
 
     public function show(int $employee_id): Employee

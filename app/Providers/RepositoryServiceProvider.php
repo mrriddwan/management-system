@@ -11,12 +11,11 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-                // Employee Repository
-                $this -> app -> bind(\App\Repositories\Employee\EmployeeRepoInterface::class, \App\Repositories\Employee\EmployeeRepository::class);
+        // Employee Repository
+        $this->app->bind(\App\Repositories\Employee\EmployeeRepoInterface::class, \App\Repositories\Employee\EmployeeRepository::class);
 
-                // Management Repository
-                $this -> app -> bind(\App\Repositories\Company\CompanyRepoInterface::class, \App\Repositories\Company\CompanyRepository::class);
-        
+        // Management Repository
+        $this->app->bind(\App\Repositories\Company\CompanyRepoInterface::class, \App\Repositories\Company\CompanyRepository::class);
     }
 
     /**
