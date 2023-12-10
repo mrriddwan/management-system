@@ -14,35 +14,36 @@ class CompanyRepository implements CompanyRepoInterface
         return Company::paginate();
     }
 
-    public function show(int $Company_id): Company
+    public function show(int $company_id): Company
     {
-        return Company::findOr($Company_id, fn () => throw new Exception("Company not found", 404));
+        return Company::findOr($company_id, fn () => throw new Exception("Company not found", 404));
     }
 
-    public function create(array $data): Company
+    public function create(array $data, ?string $logo): Company
     {
+        // dd($data['name']);
         return Company::create([
             'name'        => $data['name'],
             'email'       => $data['email'],
             'website_url' => $data['website_url'],
-            // 'logo'     => $data['name'],
+            'logo'        => $logo,
         ]);
     }
 
-    public function update(Company $Company, array $data): Company
+    public function update(Company $company, array $data, ?string $logo): Company
     {
-        $Company->update([
+        $company->update([
             'name'        => $data['name'],
             'email'       => $data['email'],
             'website_url' => $data['website_url'],
-            // 'logo'     => $data['name'],
+            'logo'        => $logo,
         ]);
 
-        return $Company;
+        return $company;
     }
 
-    public function delete(Company $Company): void
+    public function delete(Company $company): void
     {
-        $Company->delete();
+        $company->delete();
     }
 }

@@ -48,20 +48,20 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CompanyStoreRequest $request)
+    public function store(Request $request)
     {
         try
         {
             DB::beginTransaction();
 
-            $companies = CompanyAction::access()->create($request->all());
+            $company = CompanyAction::access()->create($request->all());
 
             DB::commit();
 
             return $this->success(
                 Response::HTTP_ACCEPTED,
-                'Successfully retrieved all companies',
-                CompanyResource::collection($companies),
+                'Successfully store new company',
+                new CompanyResource($company),
             );
         }
         catch (\Exception $e)
@@ -79,16 +79,12 @@ class CompanyController extends Controller
     {
         try
         {
-            DB::beginTransaction();
-
-            $companies = CompanyAction::access()->show($company_id);
-
-            DB::commit();
+            $company = CompanyAction::access()->show($company_id);
 
             return $this->success(
                 Response::HTTP_ACCEPTED,
                 'Successfully retrieved all companies',
-                CompanyResource::collection($companies),
+                new CompanyResource($company),
             );
         }
         catch (\Exception $e)
