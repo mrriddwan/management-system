@@ -16,7 +16,7 @@ class CompanyRepository implements CompanyRepoInterface
 
     public function show(int $company_id): Company
     {
-        return Company::findOr($company_id, fn () => throw new Exception("Company not found", 404));
+        return Company::with('employees')->findOr($company_id, fn () => throw new Exception("Company not found", 404));
     }
 
     public function create(array $data, ?string $logo): Company

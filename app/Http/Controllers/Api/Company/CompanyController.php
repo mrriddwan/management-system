@@ -83,8 +83,9 @@ class CompanyController extends Controller
 
             return $this->success(
                 Response::HTTP_ACCEPTED,
-                'Successfully retrieved all companies',
-                new CompanyResource($company),
+                'Successfully retrieved selected company',
+                // new CompanyResource($company),
+                $company,
             );
         }
         catch (\Exception $e)

@@ -26,8 +26,17 @@ class Company extends Model
         'website_url' => 'string',
     ];
 
+    protected $appends = [
+        'employee_count',
+    ];
+
     public function employees():HasMany
     {
         return $this->hasMany(Employee::class);
+    }
+
+    public function getEmployeeCountAttribute()
+    {
+        return $this->employees()->count();
     }
 }
