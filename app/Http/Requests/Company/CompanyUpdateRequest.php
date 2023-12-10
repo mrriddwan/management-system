@@ -4,6 +4,8 @@ namespace App\Http\Requests\Company;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyUpdateRequest extends FormRequest
 {
@@ -28,5 +30,14 @@ class CompanyUpdateRequest extends FormRequest
             'website_url' => ['nullable', 'string'],
             'logo'        => ['nullable', 'file', 'mimes:jpeg,png', 'max:2048',],
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status' => 'failed',
+            'message' => 'Validation errors',
+            'data'    => $validator->errors()
+        ], 403));
     }
 }

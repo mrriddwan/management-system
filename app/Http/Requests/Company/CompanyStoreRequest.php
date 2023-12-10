@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Company;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CompanyStoreRequest extends FormRequest
 {
@@ -27,5 +29,14 @@ class CompanyStoreRequest extends FormRequest
             'website_url' => ['required', 'string'],
             'logo'        => ['required', 'file', 'mimes:jpeg,png', 'max:2048',],
         ];
+    }
+
+    public function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'status' => 'failed',
+            'message' => 'Validation errors',
+            'data'    => $validator->errors()
+        ], 403));
     }
 }

@@ -18,6 +18,14 @@ class Company extends Model
         'website_url',
     ];
 
+    protected $casts =
+    [
+        'name'        => 'string',
+        'email'       => 'string',
+        'logo'        => 'string',
+        'website_url' => 'string',
+    ];
+
     public function employees():HasMany
     {
         return $this->hasMany(Employee::class);
