@@ -6,7 +6,7 @@ namespace App\Routes\Employee;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Employee\EmployeeController;
 
-class EmployeeRoute
+class EmployeeAPIRoute
 {
     public static function V1()
     {
