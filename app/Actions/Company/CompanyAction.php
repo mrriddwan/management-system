@@ -54,9 +54,9 @@ class CompanyAction extends ActionMaster
      * @return Company Returns a Company object containing the created Company details.
      */
 
-    public function create(Request $request): Company
+    public function create(array $data): Company
     {
-        $company = $this->companyRepo->create($request->all());
+        $company = $this->companyRepo->create($data);
 
         return $company;
     }
@@ -70,11 +70,11 @@ class CompanyAction extends ActionMaster
      * @return object Returns an object containing the updated Company details.
      */
 
-    public function update(string $company_id, Request $request): object
+    public function update(string $company_id, array $data): object
     {
         $company = $this->companyRepo->show($company_id);
 
-        $company = $this->companyRepo->update($company, $request->all());
+        $company = $this->companyRepo->update($company, $data);
 
         return $company;
     }

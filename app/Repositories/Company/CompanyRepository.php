@@ -22,14 +22,20 @@ class CompanyRepository implements CompanyRepoInterface
     public function create(array $data): Company
     {
         return Company::create([
-            'name' => $data['name'],
+            'name'        => $data['name'],
+            'email'       => $data['email'],
+            'website_url' => $data['website_url'],
+            // 'logo'     => $data['name'],
         ]);
     }
 
     public function update(Company $Company, array $data): Company
     {
         $Company->update([
-            'name' => $data['name']
+            'name'        => $data['name'],
+            'email'       => $data['email'],
+            'website_url' => $data['website_url'],
+            // 'logo'     => $data['name'],
         ]);
 
         return $Company;
