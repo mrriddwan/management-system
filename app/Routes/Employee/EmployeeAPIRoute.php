@@ -14,10 +14,10 @@ class EmployeeAPIRoute
         {
             //Resource
             Route::get('/', 'index');
-            Route::get('/{employee_id}', 'show');
-            Route::post('/create', 'store');
+            Route::post('/store', 'store');
             Route::post('/update/{employee_id}', 'update');
             Route::delete('/delete/{employee_id}', 'destroy');
+            Route::get('/{employee_id}', 'show');
         });
     }
 }

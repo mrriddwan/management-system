@@ -54,15 +54,15 @@ class EmployeeAction extends ActionMaster
      * @return Employee Returns a Employee object containing the created Employee details.
      */
 
-    public function create(Request $request): Employee
+    public function create(array $data): Employee
     {
-        $employee = $this->employeeRepo->create($request->all());
+        $employee = $this->employeeRepo->create($data);
 
         return $employee;
     }
 
     /**
-     * Update an existing Employee excluding password
+     * Update an existing Employee
      *
      * @param int $employee_id The ID of the Employee to update.
      * @param Request $request The HTTP request containing updated Employee data.
@@ -70,32 +70,14 @@ class EmployeeAction extends ActionMaster
      * @return object Returns an object containing the updated Employee details.
      */
 
-    public function updateNonPassword(string $employee_id, Request $request): object
+    public function update(string $employee_id, array $data): object
     {
         $employee = $this->employeeRepo->show($employee_id);
 
-        $employee = $this->employeeRepo->update($employee, $request->all(), false);
+        $employee = $this->employeeRepo->update($employee, $data, false);
 
         return $employee;
     }
-
-    /**
-     * Update an existing Employee's password only.
-     *
-     * @param int $employee_id The ID of the Employee to update.
-     * @param Request $request The HTTP request containing updated Employee data.
-     *
-     * @return object Returns an object containing the updated Employee details.
-     */
-
-     public function updatePassword(string $employee_id, Request $request): object
-     {
-         $employee = $this->employeeRepo->show($employee_id);
- 
-         $employee = $this->employeeRepo->update($employee, $request->all(), true);
- 
-         return $employee;
-     }
 
      /**
      * Delete an existing Employee

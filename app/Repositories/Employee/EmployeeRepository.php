@@ -23,7 +23,6 @@ class EmployeeRepository implements EmployeeRepoInterface
     public function create(array $data): Employee
     {
         return Employee::create([
-            'name'         => $data['name'],
             'first_name'   => $data['first_name'],
             'last_name'    => $data['last_name'],
             'email'        => $data['email'],
@@ -35,7 +34,6 @@ class EmployeeRepository implements EmployeeRepoInterface
     public function update(Employee $employee, array $data): Employee
     {
         $employee->update([
-            'name'         => $data['name'],
             'first_name'   => $data['first_name'],
             'last_name'    => $data['last_name'],
             'email'        => $data['email'],
