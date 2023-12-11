@@ -1,23 +1,26 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
-import { AiFillBackward, AiFillFastForward } from "react-icons/ai";
+import { Head, router, Link } from "@inertiajs/react";
+
 import { useState, useEffect } from "react";
 
-export default function Index({ auth, companies }) {
+import {
+    AiFillBackward,
+    AiFillFastForward,
+    AiFillPlusCircle,
+} from "react-icons/ai";
 
+export default function Index({ auth, companies }) {
     const [companiesData, setCompaniesData] = useState(companies ?? []);
 
     const getCompanies = (page = 1) => {
         router.get("/company/list", { page });
     };
 
-    useEffect(() => {
-
-    }, []);
+    useEffect(() => {}, []);
 
     return (
         <AuthenticatedLayout
-            user={auth.user}
+            user={auth?.user}
             header={
                 <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                     Index
@@ -29,11 +32,18 @@ export default function Index({ auth, companies }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="w-full p-5 justify-center">
+                        <div className="w-full p-5 justify-center bg-slate-300 flex">
                             <Pagination
                                 response={companies}
                                 getListMethod={getCompanies}
                             />
+                            <Link
+                                className="flex px-2 py-3 rounded-2xl bg-blue-400"
+                                href={route("company-form")}
+                            >
+                                <AiFillPlusCircle className="my-auto" />
+                                <span className="mx-2">Company</span>
+                            </Link>
                         </div>
                         <CompanyTable companies={companiesData} />
                     </div>
@@ -69,7 +79,7 @@ const CompanyTable = ({ companies }) => {
                             return (
                                 <tr
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                    key={company.id}
+                                    key={company?.id}
                                 >
                                     <td className="px-6 py-4">{company?.id}</td>
                                     <th
@@ -82,13 +92,21 @@ const CompanyTable = ({ companies }) => {
                                         {company?.email}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <img
-                                            className="h-auto max-w-full max-h-20"
-                                            src={
-                                                "/storage/logo/company-default.jpg"
-                                            }
-                                            alt="company logo"
-                                        />
+                                        {company?.logo ? (
+                                            <img
+                                                className="h-auto max-w-full max-h-20"
+                                                src={company?.logo}
+                                                alt="company logo"
+                                            />
+                                        ) : (
+                                            <img
+                                                className="h-auto max-w-full max-h-20"
+                                                src={
+                                                    "/storage/logo/company-default.jpg"
+                                                }
+                                                alt="default company logo"
+                                            />
+                                        )}
                                     </td>
                                 </tr>
                             );
@@ -116,14 +134,14 @@ const Pagination = ({ response, getListMethod }) => {
 
     return (
         <nav aria-label="Page navigation example" className="mx-auto">
-            <ul className="inline-flex -space-x-px text-sm">
+            <ul className="inline-flex -space-x-px text-sm gap-2">
                 {prev_page_url && (
                     <li>
                         <button
                             onClick={() => goToPage(current_page - 1)}
                             className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                         >
-                            Previous
+                            <AiFillBackward />
                         </button>
                     </li>
                 )}
@@ -147,7 +165,7 @@ const Pagination = ({ response, getListMethod }) => {
                             onClick={() => goToPage(current_page + 1)}
                             className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                         >
-                            Next
+                            <AiFillFastForward />
                         </button>
                     </li>
                 )}
