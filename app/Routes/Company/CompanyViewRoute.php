@@ -11,7 +11,7 @@ class CompanyViewRoute
     {
         Route::controller(CompanyController::class)->group(function ()
         {
-            Route::get('/', 'index');
+            Route::get('/list', 'list')->name('company-index');
         });
     }
 }

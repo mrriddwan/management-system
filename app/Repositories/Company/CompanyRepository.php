@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class CompanyRepository implements CompanyRepoInterface
 {
 
-    public function index(): LengthAwarePaginator
+    public function index($page): LengthAwarePaginator
     {
         return Company::paginate();
     }
@@ -21,7 +21,6 @@ class CompanyRepository implements CompanyRepoInterface
 
     public function create(array $data, ?string $logo): Company
     {
-        // dd($data['name']);
         return Company::create([
             'name'        => $data['name'],
             'email'       => $data['email'],

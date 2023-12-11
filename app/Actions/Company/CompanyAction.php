@@ -24,9 +24,9 @@ class CompanyAction extends ActionMaster
      * @return object Returns an collection containing the list of Companys.
      */
 
-    public function index()
+    public function index($page)
     {
-        $companys = $this->companyRepo->index();
+        $companys = $this->companyRepo->index($page);
 
         return $companys;
     }

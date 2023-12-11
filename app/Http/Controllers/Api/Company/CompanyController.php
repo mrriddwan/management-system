@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Api\Company;
 
+use Inertia\Inertia;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Actions\Company\CompanyAction;
+use App\Traits\Response\ResponseTrait;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Resources\Company\CompanyResource;
 use App\Http\Requests\Company\CompanyStoreRequest;
 use App\Http\Requests\Company\CompanyUpdateRequest;
-use App\Http\Resources\Company\CompanyResource;
-use App\Traits\Response\ResponseTrait;
-use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 class CompanyController extends Controller
 {
@@ -19,11 +21,11 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         try
         {
-            $companies = CompanyAction::access()->index();
+            $companies = CompanyAction::access()->index($request->page);
 
             return $this->success(
                 Response::HTTP_ACCEPTED,
@@ -31,7 +33,26 @@ class CompanyController extends Controller
                 CompanyResource::collection($companies),
             );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
+        {
+            return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
+    }
+
+    /**
+     * Render a listing of the resource.
+     */
+    public function list(Request $request)
+    {
+        try
+        {
+            $companies = CompanyAction::access()->index($request->page);
+
+            return Inertia::render('Company/Index', [
+                'companies' => $companies,
+            ]);
+        }
+        catch (\Exception | Throwable $e)
         {
             return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
         }
@@ -64,7 +85,7 @@ class CompanyController extends Controller
                 new CompanyResource($company),
             );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
@@ -88,7 +109,7 @@ class CompanyController extends Controller
                 $company,
             );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
@@ -115,7 +136,7 @@ class CompanyController extends Controller
             //     CompanyResource::collection($companies),
             // );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
@@ -142,7 +163,7 @@ class CompanyController extends Controller
                 new CompanyResource($company),
             );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
@@ -169,7 +190,7 @@ class CompanyController extends Controller
                 new CompanyResource($company),
             );
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
