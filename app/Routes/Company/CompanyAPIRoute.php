@@ -12,7 +12,7 @@ class CompanyAPIRoute
         Route::controller(CompanyController::class)->group(function ()
         {
             Route::get('/index', 'index');
-            Route::post('/store', 'store');
+            Route::post('/store', 'store')->name('company-store');
             Route::post('/update/{company_id}', 'update');
             Route::delete('/delete/{company_id}', 'destroy');
             Route::get('/{company_id}', 'show');

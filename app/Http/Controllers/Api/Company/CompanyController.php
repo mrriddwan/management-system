@@ -61,9 +61,20 @@ class CompanyController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function form()
     {
-        //
+        try
+        {
+            // $companies = CompanyAction::access()->index();
+
+            return Inertia::render('Company/Form', [
+                // 'companies' => $companies,
+            ]);
+        }
+        catch (\Exception | Throwable $e)
+        {
+            return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
     }
 
     /**
@@ -75,15 +86,15 @@ class CompanyController extends Controller
         {
             DB::beginTransaction();
 
-            $company = CompanyAction::access()->create($request->all());
+            CompanyAction::access()->create($request->all());
+
+            $companies = CompanyAction::access()->index($request->page);
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully store new company',
-                new CompanyResource($company),
-            );
+            return Inertia::render('Company/Index', [
+                'companies' => $companies,
+            ]);
         }
         catch (\Exception | Throwable $e)
         {

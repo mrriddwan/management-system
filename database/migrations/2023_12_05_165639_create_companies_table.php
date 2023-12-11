@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->nullable();
-            $table->binary('logo');
+            $table->string('logo');
             $table->string('website_url');
 
             $table->timestamps();

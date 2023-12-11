@@ -12,6 +12,7 @@ class CompanyViewRoute
         Route::controller(CompanyController::class)->group(function ()
         {
             Route::get('/list', 'list')->name('company-index');
+            Route::get('/form', 'form')->name('company-form');
         });
     }
 }

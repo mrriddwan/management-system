@@ -2,9 +2,12 @@
 
 namespace App\Actions\Company;
 
+use Carbon\Carbon;
 use App\Models\Company;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Actions\ActionMaster;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Company\CompanyRepoInterface;
@@ -56,14 +59,18 @@ class CompanyAction extends ActionMaster
 
     public function create(array $data): Company
     {
-        $logo = "";
+        $dbPath = "";
 
         if (isset($data['logo']))
         {
-            $logo = $data['logo']->store('public');
+            $fileName = $data['logo']->getClientOriginalName();
+            $filePath = Carbon::now()->format("ymd") . Str::random(12) . $fileName;
+            $data['logo']->storeAs('/public/logo', $filePath);
+
+            $dbPath = '/storage/logo/' . $filePath;
         }
 
-        $company = $this->companyRepo->create($data, $logo);
+        $company = $this->companyRepo->create($data, $dbPath);
 
         return $company;
     }

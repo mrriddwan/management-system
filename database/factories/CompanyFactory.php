@@ -27,7 +27,7 @@ class CompanyFactory extends Factory
         return [
             'name'        => fake()->company(),
             'email'       => fake()->email(),
-            'logo'        => '/public/logo/company-default.jpg',
+            'logo'        => '/storage/logo/company-default.jpg',
             'website_url' => fake()->url(),
         ];
     }
