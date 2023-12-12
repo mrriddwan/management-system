@@ -32,10 +32,10 @@ class CompanyRepository implements CompanyRepoInterface
     public function update(Company $company, array $data, ?string $logo): Company
     {
         $company->update([
-            'name'        => $data['name'],
-            'email'       => $data['email'],
-            'website_url' => $data['website_url'],
-            'logo'        => $logo,
+            'name'        => $data['name'] ?? $company->name,
+            'email'       => $data['email'] ?? $company->email,
+            'website_url' => $data['website_url'] ?? $company->website_url,
+            'logo'        => $logo ?? $company->logo,
         ]);
 
         return $company;

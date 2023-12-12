@@ -1,19 +1,38 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router, Link } from "@inertiajs/react";
+import { Head, router, Link, usePage } from "@inertiajs/react";
 
 import { useState, useEffect } from "react";
 
 import {
     AiFillBackward,
+    AiFillDelete,
+    AiFillEye,
     AiFillFastForward,
     AiFillPlusCircle,
 } from "react-icons/ai";
 
+import { useAppToast } from "@/utils/toast.util";
+
 export default function Index({ auth, companies }) {
     const [companiesData, setCompaniesData] = useState(companies ?? []);
+    const { showToast } = useAppToast();
 
     const getCompanies = (page = 1) => {
         router.get("/company/list", { page });
+    };
+
+    const deleteCompany = (companyId) => {
+        try {
+            router.delete("/api/company/delete/" + companyId);
+            showToast({
+                title: "Success",
+                description: "Updated!",
+                status: "success",
+            });
+            getCompanies()
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     useEffect(() => {}, []);
@@ -45,7 +64,10 @@ export default function Index({ auth, companies }) {
                                 <span className="mx-2">Company</span>
                             </Link>
                         </div>
-                        <CompanyTable companies={companiesData} />
+                        <CompanyTable
+                            companies={companiesData}
+                            deleteCompany={deleteCompany}
+                        />
                     </div>
                 </div>
             </div>
@@ -53,7 +75,9 @@ export default function Index({ auth, companies }) {
     );
 }
 
-const CompanyTable = ({ companies }) => {
+const CompanyTable = ({ companies, deleteCompany }) => {
+    const handleRowClick = (companyId) => {};
+
     return (
         <div className="relative overflow-x-auto p-5">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -69,8 +93,12 @@ const CompanyTable = ({ companies }) => {
                             Email
                         </th>
                         <th scope="col" className="px-6 py-3">
+                            Website
+                        </th>
+                        <th scope="col" className="px-6 py-3">
                             Logo
                         </th>
+                        <th scope="col" className="px-6 py-3"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,7 +106,7 @@ const CompanyTable = ({ companies }) => {
                         companies.data.map((company) => {
                             return (
                                 <tr
-                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-slate-600"
                                     key={company?.id}
                                 >
                                     <td className="px-6 py-4">{company?.id}</td>
@@ -90,6 +118,9 @@ const CompanyTable = ({ companies }) => {
                                     </th>
                                     <td className="px-6 py-4">
                                         {company?.email}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {company?.website_url}
                                     </td>
                                     <td className="px-6 py-4">
                                         {company?.logo ? (
@@ -107,6 +138,33 @@ const CompanyTable = ({ companies }) => {
                                                 alt="default company logo"
                                             />
                                         )}
+                                    </td>
+                                    <td className="px-6 py-4 flex gap-5 justify-center">
+
+                                        <button className="my-auto">
+                                            <AiFillEye
+                                                onClick={() => {
+                                                    router.visit(
+                                                        `/company/edit/${company?.id}`
+                                                    );
+                                                }}
+                                            />
+                                        </button>
+
+                                        <button>
+                                            <AiFillDelete
+                                                onClick={() => {
+                                                    if (
+                                                        window.confirm(
+                                                            "Confirm delete?"
+                                                        )
+                                                    ) {
+                                                        deleteCompany(company?.id);
+                                                    }
+                                                }}
+                                                style={{ color: "red" }}
+                                            />
+                                        </button>
                                     </td>
                                 </tr>
                             );

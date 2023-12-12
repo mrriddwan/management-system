@@ -13,6 +13,7 @@ class CompanyViewRoute
         {
             Route::get('/list', 'list')->name('company-index');
             Route::get('/form', 'form')->name('company-form');
+            Route::get('/edit/{company_id}', 'edit')->name('company-edit');
         });
     }
 }

@@ -88,14 +88,18 @@ class CompanyAction extends ActionMaster
     {
         $company = $this->companyRepo->show($company_id);
 
-        $logo = "";
+        $dbPath = $company->logo;
 
         if (isset($data['logo']))
         {
-            $logo = $data['logo']->store('images');
+            $fileName = $data['logo']->getClientOriginalName();
+            $filePath = Carbon::now()->format("ymd") . Str::random(12) . $fileName;
+            $data['logo']->storeAs('/public/logo', $filePath);
+
+            $dbPath = '/storage/logo/' . $filePath;
         }
 
-        $company = $this->companyRepo->update($company, $data, $logo);
+        $company = $this->companyRepo->update($company, $data, $dbPath);
 
         return $company;
     }

@@ -61,12 +61,10 @@ class CompanyController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function form()
+    public function form(Request $request)
     {
         try
         {
-            // $companies = CompanyAction::access()->index();
-
             return Inertia::render('Company/Form', [
                 // 'companies' => $companies,
             ]);
@@ -137,15 +135,12 @@ class CompanyController extends Controller
         {
             DB::beginTransaction();
 
-            // $companies = CompanyAction::access()->create($company_id);
 
-            DB::commit();
+            $company = CompanyAction::access()->show($company_id);
 
-            // return $this->success(
-            //     Response::HTTP_ACCEPTED,
-            //     'Successfully retrieved all companies',
-            //     CompanyResource::collection($companies),
-            // );
+            return Inertia::render('Company/Form', [
+                'company' => $company,
+            ]);
         }
         catch (\Exception | Throwable $e)
         {
@@ -164,42 +159,43 @@ class CompanyController extends Controller
         {
             DB::beginTransaction();
 
-            $company = CompanyAction::access()->update($company_id, $request->all());
+            CompanyAction::access()->update($company_id, $request->all());
+
+            $companies = CompanyAction::access()->index($request->page);
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully update selected company',
-                new CompanyResource($company),
-            );
+            return Inertia::render('Company/Index', [
+                'companies' => $companies,
+            ]);
         }
         catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
-            return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
+            dd($e);
+            // return redirect()->back()->withErrors($e);
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $company_id)
+    public function destroy(string $company_id, Request $request)
     {
         try
         {
             DB::beginTransaction();
 
-            $company = CompanyAction::access()->delete($company_id);
+            CompanyAction::access()->delete($company_id);
+
+            $companies = CompanyAction::access()->index($request->page);
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully deleted selected company',
-                new CompanyResource($company),
-            );
+            return Inertia::render('Company/Index', [
+                'companies' => $companies,
+            ]);
         }
         catch (\Exception | Throwable $e)
         {

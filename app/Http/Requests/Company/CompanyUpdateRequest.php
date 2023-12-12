@@ -28,16 +28,16 @@ class CompanyUpdateRequest extends FormRequest
             'name'        => ['nullable', 'string'],
             'email'       => ['nullable', 'email', Rule::unique('companies', 'email')->ignore(request('company_id'))],
             'website_url' => ['nullable', 'string'],
-            'logo'        => ['nullable', 'file', 'mimes:jpeg,png', 'max:2048',],
+            'logo'        => ['nullable', 'file', 'mimes:jpeg,png', 'max:2048'],
         ];
     }
 
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'status' => 'failed',
-            'message' => 'Validation errors',
-            'data'    => $validator->errors()
-        ], 403));
-    }
+    // public function failedValidation(Validator $validator)
+    // {
+    //     throw new HttpResponseException(response()->json([
+    //         'status' => 'failed',
+    //         'message' => 'Validation errors',
+    //         'data'    => $validator->errors()
+    //     ], 403));
+    // }
 }

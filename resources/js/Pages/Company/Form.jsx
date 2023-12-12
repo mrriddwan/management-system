@@ -1,9 +1,11 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, router } from "@inertiajs/react";
+import { Head, router, usePage } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import React from "react";
+import { useAppToast } from "@/utils/toast.util";
+
 // Chakra imports
 import {
     FormControl,
@@ -16,11 +18,13 @@ import {
     Box,
     Button,
 } from "@chakra-ui/react";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiFillSave, AiOutlinePlus } from "react-icons/ai";
 // Custom components
 
 export default function Form({ auth, company }) {
     const [companyData, setCompanyData] = useState(company ?? {});
+    const { errors } = usePage().props;
+    const { showToast } = useAppToast();
 
     const formikCompany = useFormik({
         initialValues: {
@@ -38,9 +42,28 @@ export default function Form({ auth, company }) {
         }),
 
         onSubmit: (values) => {
-            values.logo = values?.logo?.file ?? null;
+            try {
+                if (!company) {
+                    values.logo = values?.logo?.file ?? null;
 
-            router.post("/api/company/store", values);
+                    router.post("/api/company/store", values);
+                } else {
+                    if (values?.logo?.fileUrl) {
+                        values.logo = values?.logo?.file;
+                    } else if (values?.logo == company.logo) {
+                        delete values.logo;
+                    }
+                    router.post("/api/company/update/" + company.id, values);
+
+                    showToast({
+                        title: "Success",
+                        description: "Updated!",
+                        status: "success",
+                    });
+                }
+            } catch (error) {
+                throw error;
+            }
         },
     });
 
@@ -103,7 +126,13 @@ export default function Form({ auth, company }) {
                             />
                             <Box w={"full"}>
                                 <Img
-                                    src={formikCompany.values.logo.fileUrl}
+                                    w={"500px"}
+                                    h={"500px"}
+                                    src={
+                                        formikCompany.values.logo.fileUrl
+                                            ? formikCompany.values.logo.fileUrl
+                                            : formikCompany.values.logo
+                                    }
                                     mx={"auto"}
                                     py={"5"}
                                 />
@@ -115,7 +144,14 @@ export default function Form({ auth, company }) {
                                     formikCompany.submitForm();
                                 }}
                             >
-                                <AiOutlinePlus /> Company
+                                {company ? (
+                                    <AiFillSave style={{ marginRight: "10" }} />
+                                ) : (
+                                    <AiOutlinePlus
+                                        style={{ marginRight: "10" }}
+                                    />
+                                )}{" "}
+                                Company
                             </Button>
                         </Flex>
                     </div>
@@ -126,6 +162,8 @@ export default function Form({ auth, company }) {
 }
 
 export const InputFile = ({ formik, label, field }) => {
+    const { showToast } = useAppToast();
+
     return (
         <FormControl
             isInvalid={!!(formik.errors[field] && formik.touched[field])}
@@ -187,9 +225,6 @@ export const InputFile = ({ formik, label, field }) => {
                         pushTemp(value);
                     }
 
-                    console.log(tempFile);
-
-                    // console.log(temp);
                     formik.setFieldValue(field, tempFile);
                 }}
             />
