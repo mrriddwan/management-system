@@ -135,7 +135,6 @@ class CompanyController extends Controller
         {
             DB::beginTransaction();
 
-
             $company = CompanyAction::access()->show($company_id);
 
             return Inertia::render('Company/Form', [

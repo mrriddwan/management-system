@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Routes\Company\CompanyViewRoute;
+use App\Routes\Employee\EmployeeViewRoute;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,11 @@ Route::middleware('auth')->group(function()
     Route::prefix('company')->group(function ()
     {
         CompanyViewRoute::V1();
+    });
+
+    Route::prefix('employee')->group(function ()
+    {
+        EmployeeViewRoute::V1();
     });
 });
 

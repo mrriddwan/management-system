@@ -12,7 +12,7 @@ class EmployeeRepository implements EmployeeRepoInterface
 
     public function index(): LengthAwarePaginator
     {
-        return Employee::paginate();
+        return Employee::with('company')->latest('id')->paginate();
     }
 
     public function show(int $employee_id): Employee

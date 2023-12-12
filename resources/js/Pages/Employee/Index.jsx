@@ -13,32 +13,34 @@ import {
 
 import { useAppToast } from "@/utils/toast.util";
 
-export default function CompanyIndex({ auth, companies }) {
-    const [companiesData, setCompaniesData] = useState(companies ?? []);
+export default function EmployeeIndex({ auth, employees }) {
+    const [employeesData, setEmployeesData] = useState(employees ?? []);
     const { showToast } = useAppToast();
 
-    const getCompanies = (page = 1) => {
-        router.get("/company/list", { page });
+    const getEmployees = (page = 1) => {
+        router.get("/employee/list", { page });
     };
 
-    const deleteCompany = (companyId) => {
+    const deleteEmployee = (employeeId) => {
         try {
-            router.delete("/api/company/delete/" + companyId);
+            router.delete("/api/employee/delete/" + employeeId);
 
             router.reload();
-
+            
             showToast({
                 title: "Success",
                 description: "Updated!",
                 status: "success",
             });
-            getCompanies()
+            getEmployees()
         } catch (error) {
             console.log(error);
         }
     };
 
-    useEffect(() => {}, []);
+    useEffect(() => {
+    }, []);
+
 
     return (
         <AuthenticatedLayout
@@ -49,27 +51,27 @@ export default function CompanyIndex({ auth, companies }) {
                 </h2>
             }
         >
-            <Head title="Company Index" />
+            <Head title="Employee Index" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="w-full p-5 justify-center bg-slate-300 flex">
                             <Pagination
-                                response={companies}
-                                getListMethod={getCompanies}
+                                response={employees}
+                                getListMethod={getEmployees}
                             />
                             <Link
                                 className="flex px-2 py-3 rounded-2xl bg-blue-400"
-                                href={route("company-form")}
+                                href={route("employee-form")}
                             >
                                 <AiFillPlusCircle className="my-auto" />
-                                <span className="mx-2">Company</span>
+                                <span className="mx-2">Employee</span>
                             </Link>
                         </div>
-                        <CompanyTable
-                            companies={companiesData}
-                            deleteCompany={deleteCompany}
+                        <EmployeeTable
+                            employees={employeesData}
+                            deleteEmployee={deleteEmployee}
                         />
                     </div>
                 </div>
@@ -78,8 +80,8 @@ export default function CompanyIndex({ auth, companies }) {
     );
 }
 
-const CompanyTable = ({ companies, deleteCompany }) => {
-    const handleRowClick = (companyId) => {};
+const EmployeeTable = ({ employees, deleteEmployee }) => {
+    const handleRowClick = (employeeId) => {};
 
     return (
         <div className="relative overflow-x-auto p-5">
@@ -90,57 +92,52 @@ const CompanyTable = ({ companies, deleteCompany }) => {
                             ID
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Name
+                            First Name
+                        </th>
+                        <th scope="col" className="px-6 py-3">
+                            Last Name
                         </th>
                         <th scope="col" className="px-6 py-3">
                             Email
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Website
+                            Phone Number
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Logo
+                            Company
                         </th>
                         <th scope="col" className="px-6 py-3"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {companies.data &&
-                        companies.data.map((company) => {
+                    {employees.data &&
+                        employees.data.map((employee) => {
                             return (
                                 <tr
                                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-slate-600"
-                                    key={company?.id}
+                                    key={employee?.id}
                                 >
-                                    <td className="px-6 py-4">{company?.id}</td>
+                                    <td className="px-6 py-4">{employee?.id}</td>
                                     <th
                                         scope="row"
                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                     >
-                                        {company?.name}
+                                        {employee?.first_name}
+                                    </th>
+                                    <th
+                                        scope="row"
+                                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                    >
+                                        {employee?.last_name}
                                     </th>
                                     <td className="px-6 py-4">
-                                        {company?.email}
+                                        {employee?.email}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {company?.website_url}
+                                        {employee?.phone_number}
                                     </td>
                                     <td className="px-6 py-4">
-                                        {company?.logo ? (
-                                            <img
-                                                className="h-auto max-w-full max-h-20"
-                                                src={company?.logo}
-                                                alt="company logo"
-                                            />
-                                        ) : (
-                                            <img
-                                                className="h-auto max-w-full max-h-20"
-                                                src={
-                                                    "/storage/logo/company-default.jpg"
-                                                }
-                                                alt="default company logo"
-                                            />
-                                        )}
+                                        {employee?.company?.name}
                                     </td>
                                     <td className="px-6 py-4 flex gap-5 justify-center">
 
@@ -148,7 +145,7 @@ const CompanyTable = ({ companies, deleteCompany }) => {
                                             <AiFillEye
                                                 onClick={() => {
                                                     router.visit(
-                                                        `/company/edit/${company?.id}`
+                                                        `/employee/edit/${employee?.id}`
                                                     );
                                                 }}
                                             />
@@ -162,7 +159,7 @@ const CompanyTable = ({ companies, deleteCompany }) => {
                                                             "Confirm delete?"
                                                         )
                                                     ) {
-                                                        deleteCompany(company?.id);
+                                                        deleteEmployee(employee?.id);
                                                     }
                                                 }}
                                                 style={{ color: "red" }}

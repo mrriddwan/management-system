@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Api\Employee;
 
+use Throwable;
+use Inertia\Inertia;
+use App\Models\Company;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Actions\Employee\EmployeeAction;
+use App\Actions\Company\CompanyAction;
 use App\Traits\Response\ResponseTrait;
+use App\Actions\Employee\EmployeeAction;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Employee\EmployeeResource;
 use App\Http\Requests\Employee\EmployeeUpdateRequest;
@@ -36,11 +41,41 @@ class EmployeeController extends Controller
     }
 
     /**
+     * Render a listing of the resource.
+     */
+    public function list(Request $request)
+    {
+        try
+        {
+            $employees = EmployeeAction::access()->index($request->page);
+
+            return Inertia::render('Employee/Index', [
+                'employees' => $employees,
+            ]);
+        }
+        catch (\Exception | Throwable $e)
+        {
+            return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function form(Request $request)
     {
-        //
+        try
+        {
+            $companies = CompanyAction::access()->index();
+
+            return Inertia::render('Employee/Form', [
+                'companies' => $companies
+            ]);
+        }
+        catch (\Exception | Throwable $e)
+        {
+            return $this->error(Response::HTTP_CONFLICT, $e->getMessage(), $e->getFile(), $e->getLine());
+        }
     }
 
     /**
@@ -56,11 +91,11 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully store new Employee',
-                new EmployeeResource($employee),
-            );
+            $employees = EmployeeAction::access()->index($request->page);
+
+            return Inertia::render('Employee/Index', [
+                'employees' => $employees,
+            ]);
         }
         catch (\Exception $e)
         {
@@ -102,17 +137,16 @@ class EmployeeController extends Controller
         {
             DB::beginTransaction();
 
-            // $companies = EmployeeAction::access()->create($employee_id);
+            $employee = EmployeeAction::access()->show($employee_id);
 
-            DB::commit();
+            $companies = Company::all();
 
-            // return $this->success(
-            //     Response::HTTP_ACCEPTED,
-            //     'Successfully retrieved all companies',
-            //     EmployeeResource::collection($companies),
-            // );
+            return Inertia::render('Employee/Form', [
+                'employee' => $employee,
+                'companies' => $companies,
+            ]);
         }
-        catch (\Exception $e)
+        catch (\Exception | Throwable $e)
         {
             DB::rollBack();
 
@@ -133,11 +167,11 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully update selected Employee',
-                new EmployeeResource($employee),
-            );
+            $employees = EmployeeAction::access()->index($request->page);
+
+            return Inertia::render('Employee/Index', [
+                'employees' => $employees,
+            ]);
         }
         catch (\Exception $e)
         {
@@ -150,7 +184,7 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $employee_id)
+    public function destroy(string $employee_id, Request $request)
     {
         try
         {
@@ -160,11 +194,11 @@ class EmployeeController extends Controller
 
             DB::commit();
 
-            return $this->success(
-                Response::HTTP_ACCEPTED,
-                'Successfully deleted selected Employee',
-                new EmployeeResource($employee),
-            );
+            $employees = EmployeeAction::access()->index($request->page);
+
+            return Inertia::render('Employee/Index', [
+                'employees' => $employees,
+            ]);
         }
         catch (\Exception $e)
         {

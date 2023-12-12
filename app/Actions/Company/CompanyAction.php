@@ -22,16 +22,18 @@ class CompanyAction extends ActionMaster
     }
 
     /**
-     * Get a list of Companys.
+     * Get a list of companies.
      *
-     * @return object Returns an collection containing the list of Companys.
+     * @return object Returns an collection containing the list of companies.
      */
 
-    public function index($page)
+    public function index($page = null)
     {
-        $companys = $this->companyRepo->index($page);
+        $page 
+        ? $companies = $this->companyRepo->index($page)
+        : $companies = $this->companyRepo->indexNoPaginate();
 
-        return $companys;
+        return $companies;
     }
 
     /**
